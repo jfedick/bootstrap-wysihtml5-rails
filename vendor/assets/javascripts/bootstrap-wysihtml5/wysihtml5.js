@@ -3808,9 +3808,15 @@ wysihtml5.browser = (function() {
   fire: function(eventName, payload) {
     this.events = this.events || {};
     var handlers = this.events[eventName] || [],
-        i        = 0;
+    i = 0;
+
     for (; i<handlers.length; i++) {
-      handlers[i].call(this, payload);
+      // I've put .call() in if-else condition for paste:composer to skip first 2 calls in order to suppress the bug
+      if (eventName === 'paste:composer' && (i === 0 || i === 1)) {
+      console.log(eventName + " " + handlers[i]);
+      } else { 
+        handlers[i].call(this, payload);
+      }
     }
     return this;
   },
